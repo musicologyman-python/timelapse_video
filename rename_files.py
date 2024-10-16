@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # This script renames image files with a posix timestamp as the stem to
 # year-month-day-hour-minute-second format
 
@@ -34,8 +36,9 @@ def main():
         message_window.show()
         sys.exit(1)
 
-    for p in get_files(Path(image_dir)):
-        new_path = get_path_with_new_name(p)
+    image_dir_path = Path(image_dir)
+    for p in get_files(image_dir_path):
+        new_path = image_dir_path / get_path_with_new_name(p)
         p.rename(new_path)
 
 if __name__ == '__main__':
