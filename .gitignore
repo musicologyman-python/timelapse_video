@@ -4,3 +4,6 @@
 /video*/
 /logs/
 *.log
+*.jpg
+*.png
+*.jpeg

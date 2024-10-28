@@ -5,6 +5,7 @@ from datetime import datetime
 from functools import partial
 from operator import attrgetter, methodcaller
 from pathlib import Path
+import re
 from sys import stdout
 import tkinter.filedialog as fd
 from typing import Callable
@@ -29,10 +30,26 @@ TIMESTAMP_OFFSET_FROM_TOP = 20
 SEQ_NUM_OFFSET_FROM_BOTTOM = 10
 TEXT_COLOR = ImageColor.getcolor('white', mode='RGBA')
 VIDEO_DIR: Path = Path('video')
+INTEGER_RE = re.compile(r'^\s*\d+\s*$')
+PARSEABLE_DATETIME_FORMAT = '%Y%m%d%H%M%S'
+READABLE_DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'
+
+def is_integer(s: str) -> bool:
+    return INTEGER_RE.search(s) is not None 
 
 def get_image_date_string_from_file_name(image_path: Path) -> str:
-    return (datetime.strptime(image_path.stem, '%Y%m%d%H%M%S')
-                    .strftime('%Y-%m-%d %H:%M:%S'))
+    MAX_POSIX_TIMESTAMP: int = 253_402_318_800
+    stem: str = image_path.stem
+    if not is_integer(stem):
+        raise ValueError(
+            f'The file stem {stem} cannot be converted to an integer')
+    stem_int: int = int(stem)
+    image_date: datetime
+    if stem_int > MAX_POSIX_TIMESTAMP:
+        image_date = datetime.strptime(stem, PARSEABLE_DATETIME_FORMAT)
+    else:
+        image_date = datetime.fromtimestamp(stem_int)
+    return image_date.strftime(READABLE_DATETIME_FORMAT)
 
 def get_text_anchor_coordinates(bounding_box: tuple[int, int, int, int]) \
         -> tuple[int, int]:
@@ -65,7 +82,8 @@ def label_image(dest_dir: Path, p: Path) -> None:
 
 def get_image_src_dir() -> Path:
     IMAGE_DIR_TITLE = 'Choose a folder containing the images to be labeled'
-    return Path(fd.askdirectory(initialdir='.', title=IMAGE_DIR_TITLE))
+    return Path(fd.askdirectory(initialdir='.', 
+                                title=IMAGE_DIR_TITLE))
 
 def ensure_video_dest_dir_exists() -> None:
     if not VIDEO_DIR.exists():

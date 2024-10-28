@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.1"
+   viewBox="0 0 60 60"
+   id="svg2"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1">
+    <path
+       id="right-facing-triangle"
+       d="M 0 0 l 20 10 l -20 10 z"
+       fill="#000000" />
+    <path
+       id="wall"
+       d="M 0 0 l 5 0 l 0 20 l -5 0 z"
+       fill="#000000" />
+    <path
+       id="left-facing-triangle"
+       d="M 20 0 l -20 10 l 20 10 z"
+       fill="#000000" />
+  </defs>
+  <g
+     id="g1">
+    <use
+       href="#right-facing-triangle"
+       transform="translate(15, 10)"
+       id="use2" />
+    <use
+       href="#right-facing-triangle"
+       transform="translate(25, 10)"
+       id="use3" />
+  </g>
+  <text
+     x="30"
+     y="49"
+     fill="rgb(0, 0, 0)"
+     font-family="&quot;Helvetica&quot;"
+     font-size="12px"
+     text-anchor="middle"
+     id="label"
+     transform="translate(-0.5,-0.5)">5 min.</text>
+</svg>

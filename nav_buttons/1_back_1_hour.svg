@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.1"
+   viewBox="0 0 60 60"
+   id="svg2"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1">
+    <path
+       id="left-facing-triangle"
+       d="M 20 0 l -20 10 l 20 10 z"
+       fill="#000000" />
+			 <g id="left-facing-triple-triangle">
+    <use href="#left-facing-triangle"/>
+    <use href="#left-facing-triangle" transform="translate(10, 0)" />
+    <use href="#left-facing-triangle" transform="translate(20, 0)" />
+			 </g>
+  </defs>
+	 <use href="#left-facing-triple-triangle"
+		 transform="translate(10, 10)" />
+  <text
+     x="30"
+     y="49"
+     fill="rgb(0, 0, 0)"
+     font-family="&quot;Helvetica&quot;"
+     font-size="12px"
+     text-anchor="middle"
+     id="label"
+     transform="translate(-0.5,-0.5)">1 hour</text>
+</svg>
