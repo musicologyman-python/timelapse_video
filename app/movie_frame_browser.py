@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from pathlib import Path
+import sqlite3
 import tkinter as tk
 import tkinter.filedialog as fd
 
@@ -41,7 +42,7 @@ class App(tk.Tk):
 
         self.listbox_data = tk.Variable()
         self.time_listbox = tk.Listbox(self, listvariable=self.listbox_data,
-                                       relief='sunken')
+                                       relief='sunken', font='Monaco 14')
         self.time_listbox.pack(fill='both', side='left', expand=False, padx=4, 
                                pady=4)
 
@@ -145,7 +146,10 @@ class App(tk.Tk):
         self.file_menu = tk.Menu(self.menubar, tearoff=0)
         self.file_menu.add_command(label='Select Image Directory ...', 
                               command=self._select_image_directory)
+        self.file_menu.add_command(label='Select Image Database ...', 
+                              command=self._select_image_database)
         self.menubar.add_cascade(label='File', menu=self.file_menu)
+
         
         self.config(menu=self.menubar)
         
@@ -161,6 +165,28 @@ class App(tk.Tk):
             ic(f'The user has selected {self.image_dir}')
         else:
             ic(f'No directory selected')
+
+    def _select_image_database(self):
+        if (image_db :=
+                fd.askopenfilename(defaultextension='.db',
+                                   filetypes=[('SQLite Databases', '.db'),
+                                              ('All files', '.*')],
+                                    parent=self, 
+                                    title='Select an image database')):
+            ic(f'selected {image_db}')
+            self.image_database = image_db
+            self._populate_time_listbox()
+
+    def _populate_time_listbox(self):
+        with sqlite3.connect(self.image_database) as cn:
+            cur: sqlite3.Cursor = cn.execute('''SELECT hour, minute
+                                                FROM vw_minutes
+                                                WHERE mod(minute, 15) = 0
+                                                order by day, hour, minute''')
+            results = cur.fetchall()
+            self.listbox_data.set([f'{row[0]:>2}:{row[1]:02}' for row in results])
+
+
 
     # region button event handlers
 
