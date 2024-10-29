@@ -13,13 +13,17 @@
 			"**/CVS": true,
 			"**/.DS_Store": true,
 			"**/Thumbs.db": true,
+			"**/.png": true,
 			"**/.venv": true,
+			"**/camera": true,
 			"**/video_20241012": true,
 			"**/video_20241014": true,
 			"**/video_20241015": true,
 			"**/video_20241016": true,
-			"**/video_20241017": true
+			"**/video_20241017": true,
+			"**/make_directory_structure.py": true
 		},
-		"explorerExclude.backup": {}
+		"explorerExclude.backup": {},
+		"explorer.excludeGitIgnore": false
 	}
 }

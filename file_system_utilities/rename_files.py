@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
-# This script renames image files with a posix timestamp as the stem to
-# year-month-day-hour-minute-second format
+'''
+This script renames image files with a posix timestamp as the stem to
+year-month-day-hour-minute-second format
+'''
 
 import datetime as dt
 import operator

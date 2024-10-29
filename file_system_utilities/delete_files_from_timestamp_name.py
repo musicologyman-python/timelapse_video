@@ -1,3 +1,7 @@
+'''
+Delete jpeg files named using a timestamp subject to a time constraint
+'''
+
 import operator
 from pathlib import Path
 

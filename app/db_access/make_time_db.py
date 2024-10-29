@@ -83,19 +83,22 @@ def populate_db(time_records: Iterable[ImageTimeRecord],
     POPULATE_STMT = '''INSERT INTO timemap (
                             filename, year, month, day, hour, minute, second, 
                             posix_timestamp)
-                        VALUES (:filename, :year, :month, :day,
-                                :hour, :minute, :second, :posix_timestamp)'''
+                       VALUES (:filename, :year, :month, :day,
+                               :hour, :minute, :second, :posix_timestamp)'''
     with sqlite3.connect(db_filename) as cn:
         cur = cn.cursor()
-        cur.executemany(POPULATE_STMT, (asdict(tr) for tr in time_records))
+        cur.executemany(POPULATE_STMT, 
+                        (asdict(tr) for tr in time_records))
         cn.commit()
 
+# region for standalone operation
+        
 def setup_cli() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument('--recreate', '-r', type=bool, default=False, 
                         help='if True, drop and recreate the database')
     return parser.parse_args()
-        
+
 @logger.catch
 def main():
 
@@ -117,3 +120,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+# endregion

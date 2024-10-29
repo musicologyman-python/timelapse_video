@@ -5,8 +5,6 @@ import io
 import sqlite3
 import typing
 
-from icecream import ic
-
 @dataclass
 class TimeMap():
     filename: str

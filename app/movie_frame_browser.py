@@ -17,16 +17,20 @@ def get_photo_image(image_path: str, parent, image_size=BUTTON_IMAGE_SIZE) \
                                   master=parent)
 
 class App(tk.Tk):
+    
+    # region constants
 
-    PLACEHOLDER_IMAGE = 'white_rectangle.jpg'
-    FIRST_FRAME       = "nav_buttons/0_first_frame.jpg"
-    BACK_1_HOUR       = "nav_buttons/1_back_1_hour.jpg"
-    BACK_5_MINUTES    = "nav_buttons/2_back_5_minutes.jpg"
-    BACK_1_FRAME      = "nav_buttons/3_back_1_frame.jpg"
-    FORWARD_1_FRAME   = "nav_buttons/4_forward_1_frame.jpg"
-    FORWARD_5_MINUTES = "nav_buttons/5_forward_5_minutes.jpg"
-    FORWARD_1_HOUR    = "nav_buttons/6_forward_1_hour.jpg"
-    LAST_FRAME        = "nav_buttons/7_last_frame.jpg"
+    PLACEHOLDER_IMAGE = 'img/white_rectangle.jpg'
+    FIRST_FRAME       = 'nav_buttons/0_first_frame.jpg'
+    BACK_1_HOUR       = 'nav_buttons/1_back_1_hour.jpg'
+    BACK_5_MINUTES    = 'nav_buttons/2_back_5_minutes.jpg'
+    BACK_1_FRAME      = 'nav_buttons/3_back_1_frame.jpg'
+    FORWARD_1_FRAME   = 'nav_buttons/4_forward_1_frame.jpg'
+    FORWARD_5_MINUTES = 'nav_buttons/5_forward_5_minutes.jpg'
+    FORWARD_1_HOUR    = 'nav_buttons/6_forward_1_hour.jpg'
+    LAST_FRAME        = 'nav_buttons/7_last_frame.jpg'
+    
+    # endregion
 
     def __init__(self):
         
@@ -45,6 +49,8 @@ class App(tk.Tk):
 
         right_frame.pack(fill='both', side='left', expand=True, ipadx=4, 
                          ipady=4)
+
+        # region right top frame setup
 
         right_top_frame = tk.Frame(right_frame) 
         right_top_frame.pack(fill='x', side='top', expand=False)
@@ -68,6 +74,10 @@ class App(tk.Tk):
         photo_label = tk.Label(right_bottom_frame, image=self.photo, 
                                relief=tk.SUNKEN)
         photo_label.pack(fill='both', side='top', expand=True)
+        
+        # endregion
+
+        # region Button setup
 
         button_frame = tk.Frame(right_bottom_frame)
         button_frame.pack(ipadx=4, ipady=5, side='bottom')
@@ -126,6 +136,10 @@ class App(tk.Tk):
                           image=self.to_last_frame_image,
                           command=self._go_to_last_frame)
         self.to_last_frame_button.pack(side='left')
+        
+        # endregion
+
+        # region Menu setup
 
         self.menubar = tk.Menu(self)
         self.file_menu = tk.Menu(self.menubar, tearoff=0)
@@ -135,6 +149,8 @@ class App(tk.Tk):
         
         self.config(menu=self.menubar)
         
+        # endregion
+
         self.after(1000, self.time_listbox.focus_force())
         
     def _select_image_directory(self):
@@ -145,6 +161,8 @@ class App(tk.Tk):
             ic(f'The user has selected {self.image_dir}')
         else:
             ic(f'No directory selected')
+
+    # region button event handlers
 
     def _go_to_first_frame(self):
         ic('_go_to_first_frame')
@@ -169,6 +187,8 @@ class App(tk.Tk):
 
     def _go_to_last_frame(self):
         ic("_go_to_last_frame")
+        
+    # endregion
 
 
 def main():
