@@ -41,7 +41,7 @@ class DbManager(Observable):
         self.state: TimeMap = None
 
     def execute_query(self, command_text: str, 
-                      param_dict: dict) -> TimeMap:
+                      param_dict: dict=dict()) -> TimeMap:
         with sqlite3.connect(self.dbpath) as cn:
             cn.row_factory = time_map_factory
             cur = cn.execute(command_text, param_dict)
@@ -61,7 +61,7 @@ class DbManager(Observable):
                         ORDER BY posix_timestamp;'''
         return self.execute_query(COMMAND_TEXT, {'min_time': timestamp})
 
-    def get_last_record(self, timestamp: typing.Any) -> TimeMap:
+    def get_last_record(self) -> None:
         COMMAND_TEXT = '''SELECT filename,
                                  year,
                                  month,
@@ -72,42 +72,43 @@ class DbManager(Observable):
                                  posix_timestamp
                             FROM timemap 
                         ORDER BY posix_timestamp DESC;'''
-        return self.execute_query(COMMAND_TEXT, {'min_time': timestamp})
+        self.state = self.execute_query(COMMAND_TEXT)
+        self.update()
 
     def get_first_record(self) -> None:
         self.state = self.find_record()
         self.update()
 
-    def advance_one_minute(self, current_time_map: TimeMap) -> None:
-        self.state = self.find_record(current_time_map.posix_timestamp + 60)
+    def advance_one_minute(self) -> None:
+        self.state = self.find_record(self.state.posix_timestamp + 60)
         self.update()
 
-    def advance_five_minutes(self, current_time_map: TimeMap) -> None:
-        self.state =  self.find_record(current_time_map.posix_timestamp + 300)
+    def advance_five_minutes(self) -> None:
+        self.state =  self.find_record(self.state.posix_timestamp + 300)
         self.update()
 
-    def advance_one_hour(self, current_time_map: TimeMap) -> None:
-        self.state =  self.find_record(current_time_map.posix_timestamp + 3600)
+    def advance_one_hour(self) -> None:
+        self.state =  self.find_record(self.state.posix_timestamp + 3600)
         self.update()
 
-    def rewind_one_minute(self, current_time_map: TimeMap) -> None:
-        self.state =  self.find_record(current_time_map.posix_timestamp - 60)
+    def rewind_one_minute(self) -> None:
+        self.state =  self.find_record(self.state.posix_timestamp - 60)
         self.update()
 
-    def rewind_five_minutes(self, current_time_map: TimeMap) -> None:
-        self.state =  self.find_record(current_time_map.posix_timestamp - 300)
+    def rewind_five_minutes(self) -> None:
+        self.state =  self.find_record(self.state.posix_timestamp - 300)
         self.update()
 
-    def rewind_one_hour(self, current_time_map: TimeMap) -> None:
-        self.state =  self.find_record(current_time_map.posix_timestamp - 3600)
+    def rewind_one_hour(self) -> None:
+        self.state =  self.find_record(self.state.posix_timestamp - 3600)
         self.update()
 
-    def advance_one_frame(self, current_time_map: TimeMap) -> None:
-        self.state =  self.find_record(current_time_map.posix_timestamp + 1)
+    def advance_one_frame(self) -> None:
+        self.state =  self.find_record(self.state.posix_timestamp + 1)
         self.update()
 
-    def rewind_one_frame(self, current_time_map: TimeMap) -> None:
-        self.state =  self.find_record(current_time_map.posix_timestamp - 1)
+    def rewind_one_frame(self) -> None:
+        self.state =  self.find_record(self.state.posix_timestamp - 1)
         self.update()
             
     # region implementation of Observable protocol

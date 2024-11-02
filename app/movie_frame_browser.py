@@ -28,8 +28,10 @@ class App(tk.Tk, _protocols.Observer):
     FIRST_FRAME       = 'nav_buttons/0_first_frame.jpg'
     BACK_1_HOUR       = 'nav_buttons/1_back_1_hour.jpg'
     BACK_5_MINUTES    = 'nav_buttons/2_back_5_minutes.jpg'
+    BACK_1_MINUTE     = 'nav_buttons/3_back_1_minute.jpg'
     BACK_1_FRAME      = 'nav_buttons/3_back_1_frame.jpg'
     FORWARD_1_FRAME   = 'nav_buttons/4_forward_1_frame.jpg'
+    FORWARD_1_MINUTE  = 'nav_buttons/4_forward_1_minute.jpg'
     FORWARD_5_MINUTES = 'nav_buttons/5_forward_5_minutes.jpg'
     FORWARD_1_HOUR    = 'nav_buttons/6_forward_1_hour.jpg'
     LAST_FRAME        = 'nav_buttons/7_last_frame.jpg'
@@ -110,6 +112,13 @@ class App(tk.Tk, _protocols.Observer):
                           command=self._go_back_five_minutes)
         self.back_five_minutes_button.pack(side='left')
 
+        self.back_one_minute_image = get_photo_image(App.BACK_1_MINUTE, 
+                                                  parent=button_frame)
+        self.back_one_minute_button = tk.Button(button_frame,
+                          image=self.back_one_minute_image,
+                          command=self._go_back_one_minute)
+        self.back_one_minute_button.pack(side='left')
+
         self.back_one_frame_image = get_photo_image(App.BACK_1_FRAME, 
                                                parent=button_frame)
         self.back_one_frame_button = tk.Button(button_frame,
@@ -123,6 +132,13 @@ class App(tk.Tk, _protocols.Observer):
                           image=self.forward_one_frame_image,
                           command=self._go_forward_one_frame)
         self.forward_one_frame_button.pack(side='left')
+
+        self.forward_one_minute_image = get_photo_image(App.FORWARD_1_MINUTE, 
+                                                     parent=button_frame)
+        self.forward_one_minute_button = tk.Button(button_frame,
+                          image=self.forward_one_minute_image,
+                          command=self._go_forward_one_minute)
+        self.forward_one_minute_button.pack(side='left')
 
         self.forward_five_minutes_image = get_photo_image(App.FORWARD_5_MINUTES, 
                                                      parent=button_frame)
@@ -214,6 +230,10 @@ class App(tk.Tk, _protocols.Observer):
         ic("_go_back_five_minutes")
         self._db_manager.rewind_five_minutes()
 
+    def _go_back_one_minute(self):
+        ic("_go_back_one_minute")
+        self._db_manager.rewind_one_minute()
+
     def _go_back_one_frame(self):
         ic("_go_back_one_frame")
         self._db_manager.rewind_one_frame()
@@ -222,12 +242,17 @@ class App(tk.Tk, _protocols.Observer):
         ic("_go_forward_one_frame")
         self._db_manager.advance_one_frame()
 
+    def _go_forward_one_minute(self):
+        ic("_go_forward_one_minute")
+        self._db_manager.advance_one_minute()
+
     def _go_forward_five_minutes(self):
         ic("_go_forward_five_minutes")
         self._db_manager.advance_five_minutes()
 
     def _go_forward_one_hour(self):
         ic("_go_forward_one_hour")
+        self._db_manager.advance_one_hour()
 
     def _go_to_last_frame(self):
         ic("_go_to_last_frame")
