@@ -5,6 +5,14 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Application",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/app/movie_frame_browser.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/app"
+        },
+        {
             "name": "Python Debugger: Current File",
             "type": "debugpy",
             "request": "launch",

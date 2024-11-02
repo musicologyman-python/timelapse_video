@@ -2,8 +2,11 @@ from dataclasses import dataclass
 import datetime as dt
 from functools import partial
 import io
+from pathlib import Path
 import sqlite3
 import typing
+
+from _protocols import Observable, Observer
 
 @dataclass
 class TimeMap():
@@ -27,68 +30,97 @@ class TimeMap():
             return sp.getvalue()
 
 
-def time_map_factory(cursor, row):
+def time_map_factory(cursor: sqlite3.Cursor, row: typing.Any):
     return TimeMap(*row)
 
-def execute_query(command_text: str, dbpath: str='timemap.db', 
-                  **param_dict: dict) -> TimeMap:
-    with sqlite3.connect(dbpath) as cn:
-        cn.row_factory = time_map_factory
-        cur = cn.execute(command_text, param_dict)
-        return cur.fetchone()
+class DbManager(Observable):
 
-def find_record(timestamp: int=0) -> TimeMap:
-    COMMAND_TEXT = '''SELECT filename,
-                                   year,
-                                   month,
-                                   day,
-                                   hour,
-                                   minute,
-                                   second,
-                                   posix_timestamp
+    def __init__(self, dbpath: str):
+        self.dbpath = dbpath
+        self.observers = list()
+        self.state: TimeMap = None
+
+    def execute_query(self, command_text: str, 
+                      param_dict: dict) -> TimeMap:
+        with sqlite3.connect(self.dbpath) as cn:
+            cn.row_factory = time_map_factory
+            cur = cn.execute(command_text, param_dict)
+            return cur.fetchone()
+
+    def find_record(self, timestamp: int=0) -> TimeMap:
+        COMMAND_TEXT = '''SELECT filename,
+                                 year,
+                                 month,
+                                 day,
+                                 hour,
+                                 minute,
+                                 second,
+                                 posix_timestamp
                             FROM timemap 
-                            WHERE posix_timestamp >= :min_time
-                            ORDER BY posix_timestamp;'''
-    return execute_query(COMMAND_TEXT, {'min_time': timestamp})
+                           WHERE posix_timestamp >= :min_time
+                        ORDER BY posix_timestamp;'''
+        return self.execute_query(COMMAND_TEXT, {'min_time': timestamp})
 
-def get_last_record(timestamp: typing.Any) -> TimeMap:
-    COMMAND_TEXT = '''SELECT filename,
-                                   year,
-                                   month,
-                                   day,
-                                   hour,
-                                   minute,
-                                   second,
-                                   posix_timestamp
+    def get_last_record(self, timestamp: typing.Any) -> TimeMap:
+        COMMAND_TEXT = '''SELECT filename,
+                                 year,
+                                 month,
+                                 day,
+                                 hour,
+                                 minute,
+                                 second,
+                                 posix_timestamp
                             FROM timemap 
-                            ORDER BY posix_timestamp DESC;'''
-    return execute_query(COMMAND_TEXT, {'min_time': timestamp})
+                        ORDER BY posix_timestamp DESC;'''
+        return self.execute_query(COMMAND_TEXT, {'min_time': timestamp})
 
-def get_first_record() -> TimeMap:
-    return find_record()
+    def get_first_record(self) -> None:
+        self.state = self.find_record()
+        self.update()
 
-def advance_one_minute(current_time_map: TimeMap) -> TimeMap:
-    return find_record(current_time_map.posix_timestamp + 60)
+    def advance_one_minute(self, current_time_map: TimeMap) -> None:
+        self.state = self.find_record(current_time_map.posix_timestamp + 60)
+        self.update()
 
-def advance_five_minutes(current_time_map: TimeMap) -> TimeMap:
-    return find_record(current_time_map.posix_timestamp + 300)
+    def advance_five_minutes(self, current_time_map: TimeMap) -> None:
+        self.state =  self.find_record(current_time_map.posix_timestamp + 300)
+        self.update()
 
-def rewind_one_hour(current_time_map: TimeMap) -> TimeMap:
-    return find_record(current_time_map.posix_timestamp + 3600)
+    def advance_one_hour(self, current_time_map: TimeMap) -> None:
+        self.state =  self.find_record(current_time_map.posix_timestamp + 3600)
+        self.update()
 
-def rewind_one_minute(current_time_map: TimeMap) -> TimeMap:
-    return find_record(current_time_map.posix_timestamp - 60)
+    def rewind_one_minute(self, current_time_map: TimeMap) -> None:
+        self.state =  self.find_record(current_time_map.posix_timestamp - 60)
+        self.update()
 
-def rewind_five_minutes(current_time_map: TimeMap) -> TimeMap:
-    return find_record(current_time_map.posix_timestamp - 300)
+    def rewind_five_minutes(self, current_time_map: TimeMap) -> None:
+        self.state =  self.find_record(current_time_map.posix_timestamp - 300)
+        self.update()
 
-def rewind_one_hour(current_time_map: TimeMap) -> TimeMap:
-    return find_record(current_time_map.posix_timestamp - 3600)
+    def rewind_one_hour(self, current_time_map: TimeMap) -> None:
+        self.state =  self.find_record(current_time_map.posix_timestamp - 3600)
+        self.update()
 
-def advance_one_frame(current_time_map: TimeMap) -> TimeMap:
-    return find_record(current_time_map.posix_timestamp + 1)
+    def advance_one_frame(self, current_time_map: TimeMap) -> None:
+        self.state =  self.find_record(current_time_map.posix_timestamp + 1)
+        self.update()
 
-def rewind_one_frame(current_time_map: TimeMap) -> TimeMap:
-    return find_record(current_time_map.posix_timestamp - 1)
-
+    def rewind_one_frame(self, current_time_map: TimeMap) -> None:
+        self.state =  self.find_record(current_time_map.posix_timestamp - 1)
+        self.update()
+            
+    # region implementation of Observable protocol
+    
+    def register(self, obs: Observer):
+        self.observers.append(obs)
         
+    def deregister(self, obs: Observer):
+        self.observers.remove(obs)
+    
+    def update(self):
+        obs: Observer
+        for obs in self.observers:
+            obs.update(self.state)
+
+    # endregion

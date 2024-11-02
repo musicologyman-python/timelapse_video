@@ -7,21 +7,22 @@
 	"settings": {
 		"python.terminal.executeInFileDir": true,
 		"files.exclude": {
-			"**/.git": true,
-			"**/.svn": true,
-			"**/.hg": true,
-			"**/CVS": true,
+			"**/__pycache__": true,
 			"**/.DS_Store": true,
-			"**/Thumbs.db": true,
-			"**/.png": true,
+			"**/.git": true,
+			"**/.hg": true,
+			"**/.svn": true,
 			"**/.venv": true,
+			"**/*.png": true,
 			"**/camera": true,
+			"**/CVS": true,
+			"**/make_directory_structure.py": true,
+			"**/Thumbs.db": true,
 			"**/video_20241012": true,
 			"**/video_20241014": true,
 			"**/video_20241015": true,
 			"**/video_20241016": true,
-			"**/video_20241017": true,
-			"**/make_directory_structure.py": true
+			"**/video_20241017": true
 		},
 		"explorerExclude.backup": {},
 		"explorer.excludeGitIgnore": false

@@ -8,6 +8,9 @@ import tkinter.filedialog as fd
 from icecream import ic
 from PIL import Image, ImageTk, ImageOps
 
+import db_access
+import _protocols
+
 PHOTO_SIZE = (768, 1024)
 BUTTON_IMAGE_SIZE = (64, 64)
 
@@ -17,7 +20,7 @@ def get_photo_image(image_path: str, parent, image_size=BUTTON_IMAGE_SIZE) \
         return ImageTk.PhotoImage(ImageOps.contain(img, image_size), 
                                   master=parent)
 
-class App(tk.Tk):
+class App(tk.Tk, _protocols.Observer):
     
     # region constants
 
@@ -39,6 +42,9 @@ class App(tk.Tk):
         
         self.title('Movie Frame Browser')
         self.resizable(False, False)
+        self._image_database: str = None
+        self._image_dir = None
+        self._db_manager: db_access.DbManager = None
 
         self.listbox_data = tk.Variable()
         self.time_listbox = tk.Listbox(self, listvariable=self.listbox_data,
@@ -72,9 +78,9 @@ class App(tk.Tk):
 
         self.photo = get_photo_image(image_path=App.PLACEHOLDER_IMAGE, 
                                      parent=self, image_size=PHOTO_SIZE)
-        photo_label = tk.Label(right_bottom_frame, image=self.photo, 
+        self.photo_label = tk.Label(right_bottom_frame, image=self.photo, 
                                relief=tk.SUNKEN)
-        photo_label.pack(fill='both', side='top', expand=True)
+        self.photo_label.pack(fill='both', side='top', expand=True)
         
         # endregion
 
@@ -157,12 +163,14 @@ class App(tk.Tk):
 
         self.after(1000, self.time_listbox.focus_force())
         
+    # region menu handlers
+        
     def _select_image_directory(self):
         if (image_dir := 
                 fd.askdirectory(parent=self, title='Select image directory',
                                 initialdir=Path.cwd())) is not None:
-            self.image_dir = image_dir
-            ic(f'The user has selected {self.image_dir}')
+            self._image_dir = image_dir
+            ic(f'The user has selected {self._image_dir}')
         else:
             ic(f'No directory selected')
 
@@ -174,11 +182,17 @@ class App(tk.Tk):
                                     parent=self, 
                                     title='Select an image database')):
             ic(f'selected {image_db}')
-            self.image_database = image_db
+            
+            self._image_database = image_db
+            self._image_dir = Path(image_db).parent
             self._populate_time_listbox()
+            self._db_manager = db_access.DbManager(self._image_database)
+            self._db_manager.register(self)
+
+    # endregion 
 
     def _populate_time_listbox(self):
-        with sqlite3.connect(self.image_database) as cn:
+        with sqlite3.connect(self._image_database) as cn:
             cur: sqlite3.Cursor = cn.execute('''SELECT hour, minute
                                                 FROM vw_minutes
                                                 WHERE mod(minute, 15) = 0
@@ -186,35 +200,50 @@ class App(tk.Tk):
             results = cur.fetchall()
             self.listbox_data.set([f'{row[0]:>2}:{row[1]:02}' for row in results])
 
-
-
     # region button event handlers
 
     def _go_to_first_frame(self):
         ic('_go_to_first_frame')
+        self._db_manager.get_first_record()
 
     def _go_back_one_hour(self):
         ic('_go_back_one_hour')
+        self._db_manager.rewind_one_hour()
 
     def _go_back_five_minutes(self):
         ic("_go_back_five_minutes")
+        self._db_manager.rewind_five_minutes()
 
     def _go_back_one_frame(self):
         ic("_go_back_one_frame")
+        self._db_manager.rewind_one_frame()
 
     def _go_forward_one_frame(self):
         ic("_go_forward_one_frame")
+        self._db_manager.advance_one_frame()
 
     def _go_forward_five_minutes(self):
         ic("_go_forward_five_minutes")
+        self._db_manager.advance_five_minutes()
 
     def _go_forward_one_hour(self):
         ic("_go_forward_one_hour")
 
     def _go_to_last_frame(self):
         ic("_go_to_last_frame")
+        self._db_manager.get_last_record()
         
     # endregion
+    
+    # region implementation of _protocol.Observer
+    def update(self, payload: db_access.TimeMap) -> None:
+
+        image_path = self._image_dir / payload.filename 
+        image = get_photo_image(image_path, parent=self, image_size=PHOTO_SIZE)
+        self.photo_label.configure(image=image)
+        self.photo_label.image = image
+
+    #end region
 
 
 def main():
