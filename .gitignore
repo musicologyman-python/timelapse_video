@@ -8,3 +8,4 @@
 *.png
 *.jpeg
 **/__pycache__/
+app/icons/Inkscape

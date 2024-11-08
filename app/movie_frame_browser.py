@@ -25,6 +25,10 @@ class App(tk.Tk, _protocols.Observer):
     # region constants
 
     PLACEHOLDER_IMAGE = 'img/white_rectangle.jpg'
+    OPEN_IMAGE_DIR    = 'icons/image_folder.jpg'
+    OPEN_DB           = 'icons/db_icon.jpg'
+    DELETE_ALL_BEFORE = 'icons/delete_before.jpg'
+    DELETE_ALL_AFTER  = 'icons/delete_after.jpg'
     FIRST_FRAME       = 'nav_buttons/0_first_frame.jpg'
     BACK_1_HOUR       = 'nav_buttons/1_back_1_hour.jpg'
     BACK_5_MINUTES    = 'nav_buttons/2_back_5_minutes.jpg'
@@ -48,39 +52,65 @@ class App(tk.Tk, _protocols.Observer):
         self._image_dir = None
         self._db_manager: db_access.DbManager = None
 
-        self.listbox_data = tk.Variable()
-        self.time_listbox = tk.Listbox(self, listvariable=self.listbox_data,
-                                       relief='sunken', font='Monaco 14')
-        self.time_listbox.pack(fill='both', side='left', expand=False, padx=4, 
-                               pady=4)
-
-        right_frame = tk.Frame(self)
-
-        right_frame.pack(fill='both', side='left', expand=True, ipadx=4, 
+        content_frame = tk.Frame(self)
+        content_frame.pack(fill='both', side='left', expand=True, ipadx=4, 
                          ipady=4)
 
         # region right top frame setup
 
-        right_top_frame = tk.Frame(right_frame) 
-        right_top_frame.pack(fill='x', side='top', expand=False)
+        top_frame = tk.Frame(content_frame) 
+        top_frame.pack(fill='x', side='top', expand=False)
 
-        filename_caption_label = tk.Label(right_top_frame, 
+        toolbar_frame = tk.Frame(top_frame)
+        toolbar_frame.pack(fill='x', side='top', expand=True)
+        
+        self.image_folder_image = get_photo_image(App.OPEN_IMAGE_DIR,
+                                                  parent=toolbar_frame)
+        self.image_folder_button = tk.Button(toolbar_frame,
+                                             image=self.image_folder_image,
+                                             command=self._select_image_directory)
+        self.image_folder_button.pack(side='left')
+        
+        self.image_db_image = get_photo_image(App.OPEN_DB,
+                                              parent=toolbar_frame)
+        self.image_db_button = tk.Button(toolbar_frame,
+                                        image=self.image_db_image,
+                                        command=self._select_image_database)
+        self.image_db_button.pack(side='left')
+        
+        self.delete_all_before_image = get_photo_image(App.DELETE_ALL_BEFORE,
+                                                       parent=toolbar_frame)
+        self.delete_all_before_button = \
+            tk.Button(toolbar_frame, image=self.delete_all_before_image,
+                      command=lambda: ic("delete all before not implemented"))
+        self.delete_all_before_button.pack(side='left')
+
+        self.delete_all_after_image = get_photo_image(App.DELETE_ALL_AFTER,
+                                                       parent=toolbar_frame)
+        self.delete_all_after_button = \
+            tk.Button(toolbar_frame, image=self.delete_all_after_image,
+                      command=lambda: ic("delete all after not implemented"))
+        self.delete_all_after_button.pack(side='left')
+
+        filename_caption_label = tk.Label(top_frame, 
                                           text='current file:', anchor='nw')
         filename_caption_label.pack(side='left')
         
-        self.current_file = tk.StringVar()
-        filename_label = tk.Label(right_top_frame, 
-                                  textvariable=self.current_file,
-                                  relief=tk.SUNKEN, anchor=tk.NW, bg='#ffffff')
-        filename_label.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=4, pady=4)
+        self.current_file = tk.StringVar(self)
+        filename_label = tk.Label(top_frame, 
+                                       textvariable=self.current_file,
+                                       relief=tk.SUNKEN, anchor=tk.NW, 
+                                       bg='#ffffff')
+        filename_label.pack(side=tk.LEFT, fill=tk.X, expand=True, 
+                                 padx=4, pady=4)
 
-        right_bottom_frame = tk.Frame(right_frame)
-        right_bottom_frame.pack(fill='both', side='bottom', expand=True, 
+        bottom_frame = tk.Frame(content_frame)
+        bottom_frame.pack(fill='both', side='bottom', expand=True, 
                                 padx=4, pady=4)
 
         self.photo = get_photo_image(image_path=App.PLACEHOLDER_IMAGE, 
                                      parent=self, image_size=PHOTO_SIZE)
-        self.photo_label = tk.Label(right_bottom_frame, image=self.photo, 
+        self.photo_label = tk.Label(bottom_frame, image=self.photo, 
                                relief=tk.SUNKEN)
         self.photo_label.pack(fill='both', side='top', expand=True)
         
@@ -88,74 +118,74 @@ class App(tk.Tk, _protocols.Observer):
 
         # region Button setup
 
-        button_frame = tk.Frame(right_bottom_frame)
-        button_frame.pack(ipadx=4, ipady=5, side='bottom')
+        nav_button_frame = tk.Frame(bottom_frame)
+        nav_button_frame.pack(ipadx=4, ipady=5, side='bottom')
         
         self.first_frame_image = get_photo_image(App.FIRST_FRAME, 
-                                            parent=button_frame)
-        self.first_frame_button = tk.Button(button_frame,
+                                            parent=nav_button_frame)
+        self.first_frame_button = tk.Button(nav_button_frame,
                           image=self.first_frame_image,
                           command=self._go_to_first_frame)
         self.first_frame_button.pack(side='left')
 
         self.back_one_hour_image = get_photo_image(App.BACK_1_HOUR, 
-                                              parent=button_frame)
-        self.back_one_hour_button = tk.Button(button_frame,
+                                              parent=nav_button_frame)
+        self.back_one_hour_button = tk.Button(nav_button_frame,
                           image=self.back_one_hour_image,
                           command=self._go_back_one_hour)
         self.back_one_hour_button.pack(side='left')
 
         self.back_five_minutes_image = get_photo_image(App.BACK_5_MINUTES, 
-                                                  parent=button_frame)
-        self.back_five_minutes_button = tk.Button(button_frame,
+                                                  parent=nav_button_frame)
+        self.back_five_minutes_button = tk.Button(nav_button_frame,
                           image=self.back_five_minutes_image,
                           command=self._go_back_five_minutes)
         self.back_five_minutes_button.pack(side='left')
 
         self.back_one_minute_image = get_photo_image(App.BACK_1_MINUTE, 
-                                                  parent=button_frame)
-        self.back_one_minute_button = tk.Button(button_frame,
+                                                  parent=nav_button_frame)
+        self.back_one_minute_button = tk.Button(nav_button_frame,
                           image=self.back_one_minute_image,
                           command=self._go_back_one_minute)
         self.back_one_minute_button.pack(side='left')
 
         self.back_one_frame_image = get_photo_image(App.BACK_1_FRAME, 
-                                               parent=button_frame)
-        self.back_one_frame_button = tk.Button(button_frame,
+                                               parent=nav_button_frame)
+        self.back_one_frame_button = tk.Button(nav_button_frame,
                           image=self.back_one_frame_image,
                           command=self._go_back_one_frame)
         self.back_one_frame_button.pack(side='left')
 
         self.forward_one_frame_image = get_photo_image(App.FORWARD_1_FRAME, 
-                                                  parent=button_frame)
-        self.forward_one_frame_button = tk.Button(button_frame,
+                                                  parent=nav_button_frame)
+        self.forward_one_frame_button = tk.Button(nav_button_frame,
                           image=self.forward_one_frame_image,
                           command=self._go_forward_one_frame)
         self.forward_one_frame_button.pack(side='left')
 
         self.forward_one_minute_image = get_photo_image(App.FORWARD_1_MINUTE, 
-                                                     parent=button_frame)
-        self.forward_one_minute_button = tk.Button(button_frame,
+                                                     parent=nav_button_frame)
+        self.forward_one_minute_button = tk.Button(nav_button_frame,
                           image=self.forward_one_minute_image,
                           command=self._go_forward_one_minute)
         self.forward_one_minute_button.pack(side='left')
 
         self.forward_five_minutes_image = get_photo_image(App.FORWARD_5_MINUTES, 
-                                                     parent=button_frame)
-        self.forward_five_minutes_button = tk.Button(button_frame,
+                                                     parent=nav_button_frame)
+        self.forward_five_minutes_button = tk.Button(nav_button_frame,
                           image=self.forward_five_minutes_image,
                           command=self._go_forward_five_minutes)
         self.forward_five_minutes_button.pack(side='left')
 
         self.forward_one_hour_image = get_photo_image(App.FORWARD_1_HOUR, 
-                                                 parent=button_frame)
-        self.forward_one_hour_button = tk.Button(button_frame,
+                                                 parent=nav_button_frame)
+        self.forward_one_hour_button = tk.Button(nav_button_frame,
                           image=self.forward_one_hour_image,
                           command=self._go_forward_one_hour)
         self.forward_one_hour_button.pack(side='left')
 
-        self.to_last_frame_image = get_photo_image(App.LAST_FRAME, parent=button_frame)
-        self.to_last_frame_button = tk.Button(button_frame,
+        self.to_last_frame_image = get_photo_image(App.LAST_FRAME, parent=nav_button_frame)
+        self.to_last_frame_button = tk.Button(nav_button_frame,
                           image=self.to_last_frame_image,
                           command=self._go_to_last_frame)
         self.to_last_frame_button.pack(side='left')
@@ -177,7 +207,6 @@ class App(tk.Tk, _protocols.Observer):
         
         # endregion
 
-        self.after(1000, self.time_listbox.focus_force())
         
     # region menu handlers
         
@@ -201,20 +230,10 @@ class App(tk.Tk, _protocols.Observer):
             
             self._image_database = image_db
             self._image_dir = Path(image_db).parent
-            self._populate_time_listbox()
             self._db_manager = db_access.DbManager(self._image_database)
             self._db_manager.register(self)
 
     # endregion 
-
-    def _populate_time_listbox(self):
-        with sqlite3.connect(self._image_database) as cn:
-            cur: sqlite3.Cursor = cn.execute('''SELECT hour, minute
-                                                FROM vw_minutes
-                                                WHERE mod(minute, 15) = 0
-                                                order by day, hour, minute''')
-            results = cur.fetchall()
-            self.listbox_data.set([f'{row[0]:>2}:{row[1]:02}' for row in results])
 
     # region button event handlers
 
@@ -264,6 +283,7 @@ class App(tk.Tk, _protocols.Observer):
     def update(self, payload: db_access.TimeMap) -> None:
 
         image_path = self._image_dir / payload.filename 
+        self.current_file.set(str(image_path))
         image = get_photo_image(image_path, parent=self, image_size=PHOTO_SIZE)
         self.photo_label.configure(image=image)
         self.photo_label.image = image

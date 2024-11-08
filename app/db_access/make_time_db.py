@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import argparse
 from collections.abc import Iterable
 from dataclasses import asdict, dataclass, field
@@ -8,6 +10,7 @@ from operator import attrgetter
 from pathlib import Path
 import sqlite3
 import sys
+import tkinter.filedialog as fd
 
 from icecream import ic
 from loguru import logger
@@ -54,12 +57,12 @@ class ImageTimeRecord():
             return sp.getvalue()
 
 
-def get_image_files(parent: Path=Path.cwd()) -> list:
+def get_image_files(parent: Path) -> list:
     return sorted((p for p in parent.iterdir()
                    if p.suffix in IMAGE_FILE_SUFFIXES),
                   key=attrgetter('name'))
 
-def make_time_db(db_filename: str=TIME_DATABASE_FILENAME) -> None:
+def make_time_db(db_filename: Path) -> None:
     with sqlite3.connect(db_filename) as cn:
         cn.executescript('''DROP TABLE IF EXISTS timemap;
                             CREATE TABLE timemap (
@@ -93,8 +96,15 @@ def populate_db(time_records: Iterable[ImageTimeRecord],
 
 # region for standalone operation
         
+def prompt_for_image_dir() -> str:
+    return fd.askdirectory(initialdir=Path.cwd(), 
+                           title='Select the directory containing the images '
+                                 'to process')
+    
+        
 def setup_cli() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
+    parser.add_argument('image_dir', type=Path, nargs='*')
     parser.add_argument('--recreate', '-r', type=bool, default=False, 
                         help='if True, drop and recreate the database')
     return parser.parse_args()
@@ -108,15 +118,29 @@ def main():
 
     args: argparse.Namespace = setup_cli()
 
+    ic(args.image_dir)
     ic(args.recreate)
+    
+    image_dir: list[Path] = args.image_dir
+    
+    if image_dir and len(image_dir) > 0:
+        image_dir = image_dir[0]
+    elif ((image_dir_name:=prompt_for_image_dir()) is not None):
+        image_dir = Path(image_dir_name)
+    else:
+        print('No image directory selected', file=sys.stdout)
+        sys.stdout.flush()
+        exit(1)
+        
+    db_file: Path = image_dir / TIME_DATABASE_FILENAME
 
-    if args.recreate or not Path(TIME_DATABASE_FILENAME).exists():
-        make_time_db()
+    if args.recreate or not db_file.exists():
+        make_time_db(db_file)
 
-    image_files = get_image_files()
+    image_files = get_image_files(image_dir)
     image_file_records = (
             ImageTimeRecord(image_file) for image_file in image_files)
-    populate_db(image_file_records)
+    populate_db(image_file_records, db_file)
 
 if __name__ == '__main__':
     main()

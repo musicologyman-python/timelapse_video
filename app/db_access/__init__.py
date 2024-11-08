@@ -108,7 +108,7 @@ class DbManager(Observable):
         self.update()
 
     def rewind_one_frame(self) -> None:
-        self.state =  self.find_record(self.state.posix_timestamp - 1)
+        self.state =  self.find_record(self.state.posix_timestamp - 6)
         self.update()
             
     # region implementation of Observable protocol

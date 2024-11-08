@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewbox="0 0 300 300"
+   version="1.1"
+   id="svg6"
+   width="240"
+   height="240"
+   sodipodi:docname="delete_before.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="4"
+     inkscape:cx="99.875"
+     inkscape:cy="157.5"
+     inkscape:window-width="1920"
+     inkscape:window-height="971"
+     inkscape:window-x="1470"
+     inkscape:window-y="25"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg6" />
+  <style
+     id="style1">
+#trashcan rect,
+#trashcan line,
+#trashcan path {
+  stroke: #000;
+  stroke-width: 2;
+  fill: #ffffff;
+}
+	</style>
+  <defs
+     id="defs1">
+    <g
+       id="left_arrow">
+      <rect
+         x="0"
+         y="0"
+         width="160"
+         height="30"
+         id="rect1" />
+      <path
+         d="M 0,15"
+         id="path1" />
+    </g>
+  </defs>
+  <defs
+     id="defs6">
+    <g
+       id="trashcan">
+      <rect
+         x="0"
+         y="0"
+         width="100"
+         height="10"
+         id="rect2" />
+      <line
+         x1="10"
+         y1="10"
+         x2="10"
+         y2="100"
+         id="line1" />
+      <line
+         x1="30"
+         y1="10"
+         x2="30"
+         y2="100"
+         id="line2" />
+      <line
+         x1="50"
+         y1="10"
+         x2="50"
+         y2="100"
+         id="line3" />
+      <line
+         x1="70"
+         y1="10"
+         x2="70"
+         y2="100"
+         id="line4" />
+      <line
+         x1="90"
+         y1="10"
+         x2="90"
+         y2="100"
+         id="line5" />
+      <line
+         x1="10"
+         y1="100"
+         x2="90"
+         y2="100"
+         id="line6" />
+      <path
+         d="m 35,0 5,-7 h 20 l 5,7 z"
+         id="trashcan_handle" />
+    </g>
+    <g
+       id="arrow">
+      <rect
+         x="0"
+         y="0"
+         height="20"
+         width="80"
+         id="arrowshaft" />
+      <path
+         d="M 0,0 V -10 L -20,10 0,30 Z"
+         id="arrowhead" />
+    </g>
+  </defs>
+  <g
+     id="g4"
+     transform="translate(20)">
+    <use
+       href="#trashcan"
+       transform="translate(50,27.5)"
+       id="use6"
+       style="display:inline" />
+    <use
+       href="#arrow"
+       transform="translate(70,144.25)"
+       id="use3"
+       style="display:inline" />
+  </g>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:28px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000"
+     x="20.475586"
+     y="205.25"
+     id="text1"><tspan
+       sodipodi:role="line"
+       id="tspan1"
+       x="20.475586"
+       y="205.25">delete all before</tspan></text>
+</svg>

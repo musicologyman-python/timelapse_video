@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewbox="0 0 700 600"
+   version="1.1"
+   id="svg4"
+   width="175"
+   height="175"
+   sodipodi:docname="image_folder.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="4.5714286"
+     inkscape:cx="87.390625"
+     inkscape:cy="87.5"
+     inkscape:window-width="1920"
+     inkscape:window-height="971"
+     inkscape:window-x="1470"
+     inkscape:window-y="25"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg4" />
+  <style
+     id="style1">
+		 .shape {
+			 fill-opacity: 0;
+		 }
+	 </style>
+  <defs
+     id="defs4">
+    <g
+       id="paper">
+      <path
+         d="M 0,0 H 75 L 85,10 H 75 V 0 M 85,10 V 110 H 0 V 0"
+         stroke="#000000"
+         stroke-width="2"
+         fill="#ffffff"
+         id="path1" />
+      <g
+         transform="matrix(1.2,0,0,1.2,3.6,-8.4)"
+         id="g2">
+        <path
+           class="shape"
+           d="M 30,20 45,40 H 15 Z"
+           stroke="#000000"
+           stroke-width="1"
+           fill="#ffffff"
+           id="path2" />
+        <circle
+           class="shape"
+           cx="45"
+           cy="40"
+           r="10"
+           stroke="#000000"
+           fill="#ffffff"
+           id="circle2" />
+        <rect
+           class="shape"
+           x="25"
+           y="45"
+           width="20"
+           height="15"
+           stroke="#000000"
+           fill="#ffffff"
+           id="rect2" />
+      </g>
+    </g>
+    <g
+       id="folder">
+      <path
+         d="M 0,90 H 120 V 10 L 117.5,5 H 40 L 37.5,0 H 2.5 L 0,5 Z"
+         stroke="#000000"
+         stroke-width="2"
+         fill="#ffffff"
+         id="folder_back" />
+      <use
+         href="#paper"
+         transform="translate(20,-50)"
+         id="use_paper" />
+      <path
+         d="M 0,90 30,20 h 120 l -30,70"
+         stroke="#000000"
+         stroke-width="2"
+         fill="#ffffff"
+         id="folder_cover" />
+    </g>
+  </defs>
+  <use
+     href="#folder"
+     transform="matrix(0.8,0,0,0.8,27.293384,54.44082)"
+     id="use_folder" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1"
+     x="26.086914"
+     y="152.21449"
+     id="text1"><tspan
+       id="tspan1"
+       style="fill:#000000;fill-opacity:1">image folder</tspan></text>
+</svg>

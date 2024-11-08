@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewbox="0 0 700 600"
+   version="1.1"
+   id="svg5"
+   width="202"
+   height="187.99998"
+   viewBox="0 0 257.87236 240"
+   sodipodi:docname="db_icon.inkscape.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="4.0319152"
+     inkscape:cx="101.06859"
+     inkscape:cy="62.749336"
+     inkscape:window-width="1920"
+     inkscape:window-height="971"
+     inkscape:window-x="1470"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg5" />
+  <defs
+     id="defs5">
+    <rect
+       x="28.52459"
+       y="155.40984"
+       width="111.63934"
+       height="44.262295"
+       id="rect5" />
+    <ellipse
+       id="db_curve"
+       cx="100"
+       cy="0"
+       rx="100"
+       ry="33"
+       fill="#ffffff"
+       stroke="#000000"
+       stroke-width="2" />
+    <path
+       id="half_ellipse"
+       d="M 0,0 A 100,33 0 0 0 200,0"
+       stroke="#000000"
+       stroke-width="2"
+       fill="#ffffff" />
+    <g
+       id="db_icon">
+      <rect
+         x="0"
+         y="0"
+         width="200"
+         height="120"
+         fill="#ffffff"
+         id="rect1" />
+      <use
+         href="#half_ellipse"
+         x="0"
+         y="120"
+         id="use1" />
+      <use
+         href="#half_ellipse"
+         x="0"
+         y="80"
+         id="use2" />
+      <use
+         href="#half_ellipse"
+         x="0"
+         y="40"
+         id="use3" />
+      <use
+         href="#db_curve"
+         x="0"
+         y="0"
+         id="use4" />
+      <line
+         x1="0"
+         y1="0"
+         x2="0"
+         y2="120"
+         stroke="#000000"
+         stroke-width="2"
+         id="line4" />
+      <line
+         x1="200"
+         y1="0"
+         x2="200"
+         y2="120"
+         stroke="#000000"
+         stroke-width="2"
+         id="line5" />
+    </g>
+  </defs>
+  <g
+     id="g5"
+     transform="matrix(0.6029825,0,0,0.66535462,68.63793,12.447429)">
+    <use
+       href="#db_icon"
+       transform="translate(0,33)"
+       id="use5" />
+  </g>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:28.0851px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center"
+     x="32.352509"
+     y="165.27704"
+     id="text1">time mapping</text>
+  <text
+     id="text2"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:28.0851px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center"
+     x="64.867043"
+     y="198.52243">database</text>
+</svg>
