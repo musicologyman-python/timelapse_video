@@ -1,6 +1,5 @@
 .DS_Store
 /.venv/
-/camera/
 /video*/
 /logs/
 *.log
@@ -9,3 +8,5 @@
 *.jpeg
 **/__pycache__/
 app/icons/Inkscape
+file_system_utilities/write_image_date_time.py
+make_time_db.sh

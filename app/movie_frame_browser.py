@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
 from pathlib import Path
-import sqlite3
 import tkinter as tk
 import tkinter.filedialog as fd
+import tkinter.messagebox as mb
 
 from icecream import ic
 from PIL import Image, ImageTk, ImageOps
@@ -13,6 +13,7 @@ import _protocols
 
 PHOTO_SIZE = (768, 1024)
 BUTTON_IMAGE_SIZE = (64, 64)
+DEFAULT_IMAGE_DB_NAME = 'time_map.db'
 
 def get_photo_image(image_path: str, parent, image_size=BUTTON_IMAGE_SIZE) \
         -> ImageTk.PhotoImage:
@@ -77,19 +78,20 @@ class App(tk.Tk, _protocols.Observer):
                                         image=self.image_db_image,
                                         command=self._select_image_database)
         self.image_db_button.pack(side='left')
+        self.image_db_button.configure(state='disabled')
         
         self.delete_all_before_image = get_photo_image(App.DELETE_ALL_BEFORE,
                                                        parent=toolbar_frame)
         self.delete_all_before_button = \
             tk.Button(toolbar_frame, image=self.delete_all_before_image,
-                      command=lambda: ic("delete all before not implemented"))
+                      command=self._delete_all_before)
         self.delete_all_before_button.pack(side='left')
 
         self.delete_all_after_image = get_photo_image(App.DELETE_ALL_AFTER,
                                                        parent=toolbar_frame)
         self.delete_all_after_button = \
             tk.Button(toolbar_frame, image=self.delete_all_after_image,
-                      command=lambda: ic("delete all after not implemented"))
+                      command=self._delete_all_after)
         self.delete_all_after_button.pack(side='left')
 
         filename_caption_label = tk.Label(top_frame, 
@@ -207,31 +209,62 @@ class App(tk.Tk, _protocols.Observer):
         
         # endregion
 
+#        self.center_window()
         
-    # region menu handlers
+    # region toolbar button handlers
         
     def _select_image_directory(self):
         if (image_dir := 
-                fd.askdirectory(parent=self, title='Select image directory',
-                                initialdir=Path.cwd())) is not None:
+                fd.askdirectory(parent=self, 
+                                title='Select image directory',
+                                initialdir=Path.cwd().parent)) is not None:
             self._image_dir = image_dir
             ic(f'The user has selected {self._image_dir}')
+            image_db_path: Path = Path(self._image_dir) / DEFAULT_IMAGE_DB_NAME
+            if image_db_path.exists():
+                self._register_image_database(str(image_db_path))
+                self._go_to_first_frame()
         else:
             ic(f'No directory selected')
+
+    def _register_image_database(self, image_db: str):
+            self._image_database = image_db
+            self._image_dir = Path(image_db).parent
+            self._db_manager = db_access.DbManager(self._image_database)
+            self._db_manager.register(self)
 
     def _select_image_database(self):
         if (image_db :=
                 fd.askopenfilename(defaultextension='.db',
                                    filetypes=[('SQLite Databases', '.db'),
                                               ('All files', '.*')],
-                                    parent=self, 
-                                    title='Select an image database')):
+                                   parent=self, 
+                                   title='Select an image database',
+                                   initialdir=Path.cwd().parent)):
             ic(f'selected {image_db}')
+            self._register_image_database(image_db)
             
-            self._image_database = image_db
-            self._image_dir = Path(image_db).parent
-            self._db_manager = db_access.DbManager(self._image_database)
-            self._db_manager.register(self)
+    def _delete_all_before(self):
+        ic('_delete all before')
+        all_before_current_image = \
+            self._db_manager.get_all_images_before_current_image()
+        
+        for file, _ in all_before_current_image:
+            Path(self._image_dir / file).unlink()
+
+        self._db_manager.delete_all_before() 
+            
+        
+    def _delete_all_after(self):
+        ic('_delete all after')
+        all_after_current_image = \
+            self._db_manager.get_all_images_after_current_image()
+        
+        for file, _ in all_after_current_image:
+            Path(self._image_dir / file).unlink()
+
+        self._db_manager.delete_all_after() 
+
 
     # endregion 
 
@@ -283,12 +316,29 @@ class App(tk.Tk, _protocols.Observer):
     def update(self, payload: db_access.TimeMap) -> None:
 
         image_path = self._image_dir / payload.filename 
+        if not image_path.exists():
+            mb.Message(self, default=mb.OK, icon=mb.ERROR,
+                    message=f'The file {image_path.name} does not exist.').show()
+            return 
+
         self.current_file.set(str(image_path))
         image = get_photo_image(image_path, parent=self, image_size=PHOTO_SIZE)
         self.photo_label.configure(image=image)
         self.photo_label.image = image
 
     #end region
+    
+    def center_window(self) -> None:
+        
+        window_height = self.winfo_height()
+        window_width = self.winfo_width()
+        screen_height = self.winfo_screenheight()
+        screen_width = self.winfo_screenwidth()
+        top = (screen_height - window_height) // 2
+        left = (screen_width - window_width) // 2
+        
+        self.geometry(f'{window_width}x{window_height}+{left}+{top}')
+     
 
 
 def main():

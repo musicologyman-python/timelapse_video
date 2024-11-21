@@ -104,9 +104,9 @@ def prompt_for_image_dir() -> str:
         
 def setup_cli() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument('image_dir', type=Path, nargs='*')
-    parser.add_argument('--recreate', '-r', type=bool, default=False, 
-                        help='if True, drop and recreate the database')
+    parser.add_argument('image_dir', type=Path)
+#     parser.add_argument('--recreate', '-r', type=bool, default=False, 
+#                         help='if True, drop and recreate the database')
     return parser.parse_args()
 
 @logger.catch
@@ -119,23 +119,23 @@ def main():
     args: argparse.Namespace = setup_cli()
 
     ic(args.image_dir)
-    ic(args.recreate)
+#     ic(args.recreate)
     
     image_dir: list[Path] = args.image_dir
     
-    if image_dir and len(image_dir) > 0:
-        image_dir = image_dir[0]
-    elif ((image_dir_name:=prompt_for_image_dir()) is not None):
-        image_dir = Path(image_dir_name)
-    else:
-        print('No image directory selected', file=sys.stderr)
-        sys.stderr.flush()
-        exit(1)
+#     if image_dir and len(image_dir) > 0:
+#         image_dir = image_dir[0]
+#     elif ((image_dir_name:=prompt_for_image_dir()) is not None):
+#         image_dir = Path(image_dir_name)
+#     else:
+#         print('No image directory selected', file=sys.stderr)
+#         sys.stderr.flush()
+#         exit(1)
         
     db_file: Path = image_dir / TIME_DATABASE_FILENAME
 
-    if args.recreate or not db_file.exists():
-        make_time_db(db_file)
+#     if args.recreate or not db_file.exists():
+    make_time_db(db_file)
 
     image_files = get_image_files(image_dir)
     image_file_records = (

@@ -5,6 +5,15 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "make_time_db",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/make_time_db.py",
+            "console": "integratedTerminal",
+            "cwd": "${fileDirname}",
+            "args": "video_20241018"
+        },
+        {
             "name": "Application",
             "type": "debugpy",
             "request": "launch",
