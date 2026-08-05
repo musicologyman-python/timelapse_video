@@ -4,7 +4,7 @@ executing
 icecream
 loguru
 pillow
-Pygments
+Pygments>=2.20
 PyYAML
 six
 toolz
